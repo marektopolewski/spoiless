@@ -1,16 +1,31 @@
 var is_excluded = (element) => {
-    if (element.tagName == "STYLE")
+    if (element.tagName === "STYLE")
         return true;
-    if (element.tagName == "SCRIPT")
+    if (element.tagName === "SCRIPT")
         return true;
-    if (element.tagName == "NOSCRIPT")
+    if (element.tagName === "NOSCRIPT")
         return true;
-    if (element.tagName == "IFRAME")
+    if (element.tagName === "IFRAME")
         return true;
-    if (element.tagName == "OBJECT")
+    if (element.tagName === "OBJECT")
         return true;
     return false
 }
+
+var has_background_image = (element) => {
+    if (element.tagName !== "DIV")
+        return false;
+
+    const inline_bg_image = element.style.backgroundImage;
+    if (inline_bg_image && inline_bg_image.length > 0)
+        return true;
+
+    const computed_bg_image = element.computedStyleMap().get("background-image").toString();
+    if (computed_bg_image !== 'none' && /^url\(/.test(computed_bg_image))
+        return true;
+
+    return false;
+};
 
 var set_style = (element, blur=10) => {
     element.classList.add("spoiless-hidden");
@@ -46,11 +61,8 @@ var traverse = (element, keywords, hide_callback) => {
         if (is_excluded(element))
             return;
 
-        if (element.tagName == "IMG" ||
-            (element.tagName == "DIV" && element.style.backgroundImage))
-        {
+        if (element.tagName == "IMG" || has_background_image(element))
             hide_element(element);
-        }
 
         for (let it = 0; it < element.childNodes.length; it++)
             traverse(element.childNodes[it], keywords, () => { set_style(element) });
