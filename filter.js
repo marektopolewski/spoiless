@@ -70,8 +70,6 @@ var traverse = (element, keywords, hide_callback) => {
 
 var filter_element = (element) => {
     chrome.storage.sync.get("keywords", ({ keywords }) => {
-
-        console.log("filter_element", keywords)
         if (!keywords || keywords.length === 0)
             return;
         keywords = keywords.filter(it => it.active);
