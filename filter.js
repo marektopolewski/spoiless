@@ -1,4 +1,4 @@
-const is_excluded = (element) => {
+var is_excluded = (element) => {
     if (element.tagName == "STYLE")
         return true;
     if (element.tagName == "SCRIPT")
@@ -12,7 +12,7 @@ const is_excluded = (element) => {
     return false
 }
 
-const set_style = (element, blur=10) => {
+var set_style = (element, blur=10) => {
     element.classList.add("spoiless-hidden");
     element.style.cssText += `-webkit-filter: blur(${blur}px);`;
     element.style.cssText += `-moz-filter: blur(${blur}px);`;
@@ -21,7 +21,7 @@ const set_style = (element, blur=10) => {
     element.style.cssText += `filter: blur(${blur}px);`;
 }
 
-const unset_style = (element) => {
+var unset_style = (element) => {
     element.classList.remove("spoiless-hidden");
     element.classList.add("spoiless-shown");
     element.style.removeProperty("filter");
@@ -32,7 +32,7 @@ const unset_style = (element) => {
     element.style.removeProperty("filter");
 }
 
-const hide_element = (element) => {
+var hide_element = (element) => {
     set_style(element);
     element.addEventListener("click", (event) => {
         event.preventDefault();
@@ -41,7 +41,7 @@ const hide_element = (element) => {
     }, { once: true });
 };
 
-const traverse = (element, keywords, hide_callback) => {
+var traverse = (element, keywords, hide_callback) => {
     if (element.nodeType == Node.ELEMENT_NODE || element.nodeType == Node.DOCUMENT_NODE) {
         if (is_excluded(element))
             return;
@@ -68,7 +68,7 @@ const traverse = (element, keywords, hide_callback) => {
     }
 }
 
-const filter_element = (element) => {
+var filter_element = (element) => {
     chrome.storage.sync.get("keywords", ({ keywords }) => {
 
         console.log("filter_element", keywords)
@@ -79,10 +79,11 @@ const filter_element = (element) => {
             traverse(element, keywords, () => {});
     });
 };
+
 filter_element(document);
 
 // Filter any changes to DOM https://stackoverflow.com/a/14570614/13171163
-const observeDOM = (function () {
+var observeDOM = (function () {
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
     return function (obj, callback) {
         if (!obj || obj.nodeType !== 1)
