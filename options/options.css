@@ -1,0 +1,115 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: rgb(240, 240, 240);
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.subheader {
+    margin-bottom: -10px;
+}
+
+#filter_toggle {
+    margin-left: 8px;
+    width: 60px;
+    height: 25px;
+    font-size: smaller;
+    color: white;
+}
+
+#keywords_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.keyword_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+.keyword_active_checkbox {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+.keyword_delete_button {
+    width: 30px;
+    height: 30px;
+}
+
+#add_keyword_textarea {
+    width: 200px;
+}
+
+
+#website_filter_mode {
+    margin-left: 8px;
+    width: 80px;
+    height: 25px;
+    font-size: smaller;
+}
+
+#website_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.website_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+.website_button_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.website_xlist_div div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.website_blacklist_div {
+    background-color: black;
+    color: white;
+}
+
+.website_xlist_checkbox {
+    width: 15px;
+    height: 15px;
+    margin-left: 5px;
+}
+
+.website_delete_button {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+#add_website_textarea {
+    width: 200px;
+}

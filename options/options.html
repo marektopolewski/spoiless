@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spoiless: Settings</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="options.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 style="text-decoration:underline">Spoiless: Settings</h1>
+    <br/>
+
+    <h2 style="margin-bottom: 2px;">Filtering</h2>
+    <label for="filter_toggle">Toggle spoiler filtering on/off</label>
+    <button type="button" id="filter_toggle"></button>
+    <br/><br/><br/>
+
+    <h2>Keywords</h2>
+    <p>These words will be used to filter out spoil-potential content.</p>
+    <div id="keywords_list"></div>
+    <br/>
+    <label for="add_keyword_textarea">Add keywords:</label>
+    <input type="text" id="add_keyword_textarea" placeholder="Enter a new keyword here">
+    <button type="button" id="add_keyword_button">👍</button>
+    <br/><br/><br/>
+
+    <h2>Websites</h2>
+    <p>Manage how the spoiler-filtering affects listed pages.</p>
+    <div id="website_list"></div>
+    <br/>
+    <label for="add_website_textarea">Add websites:</label>
+    <input type="text" id="add_website_textarea" placeholder="Enter a new website here">
+    <button type="button" id="add_website_button">👍</button>
+    <br/><br/>
+    <p>The filter runs in two modes - whitelist or blacklist.</p>
+    <p>
+        If in whitelist, then all whitelisted websites are ignored by the
+        filter even if spoilers are found. <br/> If in blacklist, then the
+        filter runs only on the blacklisted websites and other pages are
+        omitted in the filtering.
+    </p>
+    <p>Note: only on of the filters can be active at any given time.</p>
+    <label for="website_filter_mode">Toggle filter mode:</label>
+    <button type="button" id="website_filter_mode"></button>
+    <br/><br/><br/>
+
+    <script src="options.js"></script>
+</body>
+</html>
