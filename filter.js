@@ -9,7 +9,7 @@ var is_excluded = (element) => {
         return true;
     if (element.tagName === "OBJECT")
         return true;
-    return false
+    return false;
 }
 
 var has_background_image = (element) => {
@@ -34,29 +34,51 @@ var set_style = (element, blur=10) => {
     element.style.cssText += `-o-filter: blur(${blur}px);`;
     element.style.cssText += `-ms-filter: blur(${blur}px);`;
     element.style.cssText += `filter: blur(${blur}px);`;
-}
-
-var unset_style = (element) => {
-    element.classList.remove("spoiless-hidden");
-    element.classList.add("spoiless-shown");
-    element.style.removeProperty("filter");
-    element.style.removeProperty("-webkit-filter");
-    element.style.removeProperty("-moz-filter");
-    element.style.removeProperty("-o-filter");
-    element.style.removeProperty("-ms-filter");
-    element.style.removeProperty("filter");
-}
-
-var hide_element = (element) => {
-    set_style(element);
     element.addEventListener("click", (event) => {
-        event.preventDefault();
         event.stopPropagation();
-        unset_style(element);
-    }, { once: true });
+        let parent = element.parentNode;
+        let child = element.childNodes[0];
+        child.classList.add("spoiless-shown");
+        parent.replaceChild(child, element);
+    });
+}
+
+// var unset_style = (element) => {
+//     element.classList.remove("spoiless-hidden");
+//     element.style.removeProperty("filter");
+//     element.style.removeProperty("-webkit-filter");
+//     element.style.removeProperty("-moz-filter");
+//     element.style.removeProperty("-o-filter");
+//     element.style.removeProperty("-ms-filter");
+//     element.style.removeProperty("filter");
+// }
+
+// TODO: consider adding a wrapper div instead - might fix click propagation
+// var hide_element_2 = (element) => {
+//     set_style(element);
+//     element.addEventListener("click", (event) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//         unset_style(element);
+//     }, { once: true });
+// };
+
+var hide_element = (element, extra_wrap=false) => {
+    let parent = element.parentNode;
+    let wrapper = document.createElement("div");
+    if (extra_wrap) {
+        let extra_wrapper = document.createElement("div");
+        parent.replaceChild(wrapper, element);
+        wrapper.appendChild(extra_wrapper);
+        extra_wrapper.appendChild(element);
+    } else {
+        parent.replaceChild(wrapper, element);
+        wrapper.appendChild(element);
+    }
+    set_style(wrapper);
 };
 
-var traverse = (element, keywords, hide_callback) => {
+var traverse = (element, keywords) => {
     if (element.nodeType == Node.ELEMENT_NODE || element.nodeType == Node.DOCUMENT_NODE) {
         if (is_excluded(element))
             return;
@@ -65,18 +87,20 @@ var traverse = (element, keywords, hide_callback) => {
             hide_element(element);
 
         for (let it = 0; it < element.childNodes.length; it++)
-            traverse(element.childNodes[it], keywords, () => { set_style(element) });
+            traverse(element.childNodes[it], keywords);
     }
 
     else if (element.nodeType == Node.TEXT_NODE) {
         if (element.nodeValue.trim() === "")
             return; // empty text node
-        for (const it of keywords) {
-            if (element.nodeValue.toLowerCase().includes(it.keyword)) {
-                hide_callback();
-                break;
-            }
-        }
+
+            hide_element(element, extra_wrap=true);
+        // for (const it of keywords) {
+        //     if (element.nodeValue.toLowerCase().includes(it.keyword)) {
+        //         hide_element(element, extra_wrap=true);
+        //         break;
+        //     }
+        // }
     }
 }
 
@@ -86,7 +110,7 @@ var filter_element = (element) => {
             return;
         keywords = keywords.filter(it => it.active);
         if (keywords.length > 0)
-            traverse(element, keywords, () => {});
+            traverse(element, keywords);
     });
 };
 
@@ -110,9 +134,23 @@ var observeDOM = (function () {
     }
 })()
 
+var is_hidden = (element) => {
+    const parent_class_list = element.parentNode.classList;
+    const this_class_list = element.classList;
+    return (parent_class_list && parent_class_list.contains("spoiless-hidden")) 
+            || this_class_list.contains("spoiless-hidden");
+}
+
+var is_shown = (element) => {
+    return element.classList.contains("spoiless-shown");
+}
+
 observeDOM(document.body, function (m) {
     m.forEach(record => {
         record.addedNodes.forEach(node => {
+            if (is_hidden(node) || is_shown(node))
+                return;
+            console.log("new node", node)
             filter_element(node);
         });
     });
