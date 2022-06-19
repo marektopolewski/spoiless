@@ -1,10 +1,20 @@
 
 /******************************* FILTER TOGGLE *******************************/
 let filter_toggle = document.getElementById("filter_toggle");
+let set_icon = (str) => {
+    console.log("set_icon", str)
+    chrome.action.setIcon({ path: {
+        '16': `/images/spoiless_${str}_16.png`,
+        '32': `/images/spoiless_${str}_32.png`,
+        '48': `/images/spoiless_${str}_48.png`,
+        '128': `/images/spoiless_${str}_128.png`,
+    }})
+};
 let set_filter_toggle = (filter) => {
+    set_icon(filter ? "red" : "green");
     filter_toggle.innerText = filter ? "ACTIVE" : "INACTIVE";
     filter_toggle.value = filter;
-    filter_toggle.style.backgroundColor = filter ? "rgb(40, 144, 54)" : "rgb(191, 33, 33)";
+    filter_toggle.style.backgroundColor = filter ? "rgb(191, 33, 33)" : "rgb(40, 144, 54)";
 };
 
 chrome.storage.sync.get("filter", ({ filter }) => {

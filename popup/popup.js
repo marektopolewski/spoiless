@@ -1,7 +1,18 @@
 let spoiler_toggle = document.getElementById("spoiler_toggle");
 let spoiler_label = document.getElementById("spoiler_label");
 
+let set_icon = (str) => {
+    console.log("set_icon", str)
+    chrome.action.setIcon({ path: {
+        '16': `/images/spoiless_${str}_16.png`,
+        '32': `/images/spoiless_${str}_32.png`,
+        '48': `/images/spoiless_${str}_48.png`,
+        '128': `/images/spoiless_${str}_128.png`,
+    }})
+};
+
 let set_spoilter_toggle = (filter) => {
+    set_icon(filter ? "red" : "green");
     spoiler_toggle.innerHTML = filter ? "Spoiless<br/>👍" : "Spoilfull<br/>😬";
     spoiler_toggle.value = filter;
     spoiler_toggle.classList.remove("filter-active");

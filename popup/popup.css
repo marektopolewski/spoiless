@@ -26,10 +26,10 @@ button {
 
 .filter-active {
     color: white;
-    background-color: rgb(40, 144, 54);
+    background-color: rgb(191, 33, 33);
 }
 
 .filter-inactive {
     color: white;
-    background-color: rgb(191, 33, 33);
+    background-color: rgb(40, 144, 54);
 }
