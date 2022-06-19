@@ -20,10 +20,12 @@ var has_background_image = (element) => {
     if (inline_bg_image && inline_bg_image.length > 0)
         return true;
 
-    const computed_bg_image = element.computedStyleMap().get("background-image").toString();
-    if (computed_bg_image !== 'none' && /^url\(/.test(computed_bg_image))
-        return true;
-
+    const computed_bg_image = element.computedStyleMap().get("background-image");
+    if (computed_bg_image) {
+        const computed_bg_image_str = computed_bg_image.toString();
+        if (computed_bg_image_str !== 'none' && /^url\(/.test(computed_bg_image_str))
+            return true;
+    }
     return false;
 };
 
@@ -49,9 +51,9 @@ var unset_style = (element) => {
 
 var hide_element = (element) => {
     set_style(element);
-    element.addEventListener("click", (event) => {
-        event.preventDefault();
+    element.addEventListener("dblclick", (event) => {
         event.stopPropagation();
+        event.preventDefault();
         unset_style(element);
     }, { once: true });
 };
@@ -61,11 +63,14 @@ var traverse = (element, keywords, hide_callback) => {
         if (is_excluded(element))
             return;
 
-        if (element.tagName == "IMG" || has_background_image(element))
+        if (element.tagName == "IMG")
             hide_element(element);
 
+        if (has_background_image(element))
+            hide_element(element.parentNode);
+
         for (let it = 0; it < element.childNodes.length; it++)
-            traverse(element.childNodes[it], keywords, () => { set_style(element) });
+            traverse(element.childNodes[it], keywords, () => { hide_element(element) });
     }
 
     else if (element.nodeType == Node.TEXT_NODE) {
@@ -90,8 +95,6 @@ var filter_element = (element) => {
     });
 };
 
-filter_element(document);
-
 // Filter any changes to DOM https://stackoverflow.com/a/14570614/13171163
 var observeDOM = (function () {
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -109,6 +112,11 @@ var observeDOM = (function () {
         }
     }
 })()
+
+
+// Main
+
+filter_element(document);
 
 observeDOM(document.body, function (m) {
     m.forEach(record => {
